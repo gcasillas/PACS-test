@@ -1,0 +1,11 @@
+{
+  "Name": "Dev_PACS",
+  "RemoteAccessAllowed": true,
+  "AuthenticationEnabled": false,
+  "DicomAet": "Dev_PACS",
+  "DicomCheckCalledAet": false,
+  "DicomAlwaysAllowFind": true,
+  "DicomAlwaysAllowStore": true,
+  "DicomAlwaysAllowMove": true,
+  "DicomModalities": {}
+}

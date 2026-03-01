@@ -1,0 +1,8 @@
+{
+  "name": "Orthanc Dev Environment",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "orthanc",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "forwardPorts": [8042, 4242],
+  "postCreateCommand": "echo 'Orthanc is ready!'"
+}
