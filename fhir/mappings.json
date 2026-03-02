@@ -1,0 +1,13 @@
+{
+  "hl7_to_fhir_patient": {
+    "PID-3": "Patient.identifier.value (MRN)",
+    "PID-5": "Patient.name",
+    "PID-7": "Patient.birthDate",
+    "PID-8": "Patient.gender"
+  },
+  "dicom_to_fhir_imaging_study": {
+    "0010,0020": "Patient.id (via correlation)",
+    "0020,000D": "ImagingStudy.identifier.value",
+    "0008,0020": "ImagingStudy.started"
+  }
+}

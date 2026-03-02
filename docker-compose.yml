@@ -1,27 +1,15 @@
 services:
-  seg-generator:
-    image: python:3.11-slim
-    working_dir: /app
+  orthanc:
+    image: orthancteam/orthanc:latest
+    container_name: orthanc
+    ports:
+      - "4242:4242"
+      - "8042:8042"
+    environment:
+      ORTHANC_NAME: "Lean Orthanc"
+      DICOM_AET: "Dev_PACS"
     volumes:
-      - ./:/app
-    env_file:
-      - .env
-    command:
-      - /bin/bash
-      - -lc
-      - pip install --no-cache-dir -r requirements.txt && python generate_seg.py
+      - orthanc-db:/var/lib/orthanc/db
 
-  cloud-push:
-    image: python:3.11-slim
-    working_dir: /app
-    volumes:
-      - ./:/app
-    env_file:
-      - .env
-    depends_on:
-      seg-generator:
-        condition: service_completed_successfully
-    command:
-      - /bin/bash
-      - -lc
-      - pip install --no-cache-dir -r requirements.txt && python validate_pipeline.py && python cloud_push.py
+volumes:
+  orthanc-db:
