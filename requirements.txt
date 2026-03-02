@@ -3,3 +3,4 @@ pynetdicom==3.0.4
 requests==2.32.5
 pillow>=10.0
 numpy>=2.0
+highdicom>=0.24

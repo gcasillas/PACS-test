@@ -1,0 +1,27 @@
+services:
+  seg-generator:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
+    command:
+      - /bin/bash
+      - -lc
+      - pip install --no-cache-dir -r requirements.txt && python generate_seg.py
+
+  cloud-push:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
+    depends_on:
+      seg-generator:
+        condition: service_completed_successfully
+    command:
+      - /bin/bash
+      - -lc
+      - pip install --no-cache-dir -r requirements.txt && python validate_pipeline.py && python cloud_push.py
