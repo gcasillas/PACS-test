@@ -1,8 +1,13 @@
 {
   "name": "Orthanc Dev Environment",
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "orthanc",
+  "runServices": [
+    "orthanc",
+    "openemr-db",
+    "openemr"
+  ],
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "forwardPorts": [8042, 4242],
-  "postCreateCommand": "echo 'Orthanc is ready!'"
+  "forwardPorts": [8042, 4242, 8080],
+  "postCreateCommand": "echo 'Orthanc and OpenEMR are ready!'"
 }

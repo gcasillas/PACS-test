@@ -1,15 +1,50 @@
 services:
   orthanc:
-    image: orthancteam/orthanc:latest
+    image: orthancteam/orthanc:24.2.0
     container_name: orthanc
     ports:
       - "4242:4242"
       - "8042:8042"
     environment:
-      ORTHANC_NAME: "Lean Orthanc"
-      DICOM_AET: "Dev_PACS"
+      ORTHANC_NAME: "PACS-Test Orthanc"
+      ORTHANC__NAME: "PACS-Test Orthanc"
+      ORTHANC__DICOM_AET: "Dev_PACS"
+      ORTHANC__AUTHENTICATION_ENABLED: "true"
+      ORTHANC__REGISTERED_USERS: '{"orthanc_user":"orthanc_secure_pass"}'
     volumes:
       - orthanc-db:/var/lib/orthanc/db
 
+  openemr-db:
+    image: mariadb:11.4
+    container_name: openemr-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: pg_secure_pass
+      MYSQL_DATABASE: openemr
+      MYSQL_USER: openemr
+      MYSQL_PASSWORD: pg_secure_pass
+    volumes:
+      - openemr-db-v2:/var/lib/mysql
+
+  openemr:
+    image: openemr/openemr:7.0.4
+    container_name: openemr
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_HOST: openemr-db
+      MYSQL_ROOT_PASS: pg_secure_pass
+      MYSQL_USER: openemr
+      MYSQL_PASS: pg_secure_pass
+      OE_USER: admin
+      OE_PASS: AdminPass123!
+      PHP_INI_DISPLAY_ERRORS: "Off"
+      OPENEMR_SETTING_enable_cors: "1"
+    depends_on:
+      openemr-db:
+        condition: service_started
+
 volumes:
   orthanc-db:
+  openemr-db-v2:

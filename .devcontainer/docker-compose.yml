@@ -1,13 +1,45 @@
 version: '3.8'
 services:
   orthanc:
-    image: jodogne/orthanc-plugins:latest
+    image: orthancteam/orthanc:24.2.0
     ports:
       - "8042:8042"
       - "4242:4242"
+    environment:
+      ORTHANC_NAME: "PACS-Test Orthanc"
+      ORTHANC__NAME: "PACS-Test Orthanc"
+      ORTHANC__DICOM_AET: "Dev_PACS"
+      ORTHANC__AUTHENTICATION_ENABLED: "true"
+      ORTHANC__REGISTERED_USERS: '{"orthanc_user":"orthanc_secure_pass"}'
     volumes:
-      - ./orthanc.json:/etc/orthanc/orthanc.json:ro
       - orthanc-storage:/var/lib/orthanc/db
+
+  openemr-db:
+    image: mariadb:11.4
+    environment:
+      MYSQL_ROOT_PASSWORD: pg_secure_pass
+      MYSQL_DATABASE: openemr
+      MYSQL_USER: openemr
+      MYSQL_PASSWORD: pg_secure_pass
+    volumes:
+      - openemr-db-storage-v2:/var/lib/mysql
+
+  openemr:
+    image: openemr/openemr:7.0.4
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_HOST: openemr-db
+      MYSQL_ROOT_PASS: pg_secure_pass
+      MYSQL_USER: openemr
+      MYSQL_PASS: pg_secure_pass
+      OE_USER: admin
+      OE_PASS: AdminPass123!
+      PHP_INI_DISPLAY_ERRORS: "Off"
+      OPENEMR_SETTING_enable_cors: "1"
+    depends_on:
+      - openemr-db
 
 volumes:
   orthanc-storage:
+  openemr-db-storage-v2:
